@@ -32,3 +32,21 @@ export const cleanSourceCode = (sourceCode: string): string => {
 
     return cleanedCode;
 };
+
+export const cleanTestScript = (sourceCode: string): string => {
+    // Remove the leading "```solidity" and trailing "```"
+    let cleanedCode = sourceCode.replace(/```typescript|```/g, "").trim();
+
+    return cleanedCode;
+};
+
+
+export const parseTestError = (stderr: string): string => {
+    console.log("Parsing stderr for errors...");
+    const errorLines = stderr.split("\n");
+    const relevantErrors = errorLines
+        .filter(line => line.includes("FAIL") || line.includes("Error"))
+        .join("\n");
+    return relevantErrors || "Unable to determine the exact error.";
+};
+

@@ -2,24 +2,29 @@ import { artifacts, run } from "hardhat";
 import * as fs from "fs";
 import * as path from "path";
 
-export const compileContract = async (contractCode: string, contractName: string): Promise<{ abi: any; bytecode: string }> => {
+export const compileContract = async (contractCode: string, contractName: string): Promise<any> => {
     const contractPath = path.join(__dirname, "../../contracts", `${contractName}.sol`);
-    
-    fs.mkdirSync(path.dirname(contractPath), { recursive: true });
-    
-    fs.writeFileSync(contractPath, contractCode);
 
+    fs.mkdirSync(path.dirname(contractPath), { recursive: true });
+
+    fs.writeFileSync(contractPath, contractCode);
     try {
         console.log("Running Hardhat compile...");
         await run("compile");
     } catch (error: any) {
-        throw new Error(`Error during compilation: ${error.message}`);
+        if (fs.existsSync(contractPath)) {
+            fs.unlinkSync(contractPath);
+        }
+        return { error: error.message };
     }
-
     try {
         const contractArtifact = await artifacts.readArtifact(contractName);
         return { abi: contractArtifact.abi, bytecode: contractArtifact.bytecode };
-    } catch (error) {
-        throw new Error(`Artifact for contract "${contractName}" not found. Ensure the contract is compiled and the contract name matches.`);
+    } catch (error: any) {
+        console.error("Error reading contract artifact:", error.message);
+    } finally {
+        if (fs.existsSync(contractPath)) {
+            fs.unlinkSync(contractPath);
+        }
     }
 };

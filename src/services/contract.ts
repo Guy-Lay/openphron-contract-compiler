@@ -1,19 +1,31 @@
 import { compileContract } from "../utils/compileContract";
 import { cleanSourceCode, extractContractName, getSigner } from "../utils";
 import { autoInstallModules } from "../utils/installModules";
+import { runTests } from "../utils/runTest";
 
 const contractService = {
-    deploy: async (contractCode: string): Promise<any> => {
+    compile: async (contractCode: string): Promise<any> => {
         try {
             const contractName = extractContractName(contractCode);
-            autoInstallModules(contractCode);
-            const { abi, bytecode } = await compileContract(cleanSourceCode(contractCode), contractName);
-
-            return { abi, bytecode }
+            await autoInstallModules(contractCode);
+            const result = await compileContract(cleanSourceCode(contractCode), contractName);
+            return result;
         } catch (error: any) {
+
             console.log("contractService Error: ", error.message);
+
+        }
+    },
+    testCode: async (testCode: string): Promise<any> => {
+        try {
+            const result = await runTests(testCode);
+            if (!result) throw new Error("the result is empty!")
+                console.log(JSON.stringify(result, null, 2));
+            return result;
+        } catch (error: any) {
+            console.log("testCode-Error: ", error.message);
         }
     }
 }
 
-export default contractService;
+export default contractService

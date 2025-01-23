@@ -3,6 +3,7 @@ import contractController from "../controllers/contract";
 
 const router = express.Router();
 
-router.post("/test", contractController.deploy);
+router.post("/compile", contractController.compile);
+router.post("/test", contractController.testContrat);
 
 export default router;

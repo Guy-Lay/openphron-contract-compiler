@@ -18,7 +18,6 @@ export const runTests = async (testCode: string): Promise<any> => {
         console.log("stdout:", stdout, "stderr:", stderr);
 
         if (stderr) {
-            // const errorDetails = parseTestError(stderr);
             const errorDetails = stderr;
             return { success: false, detail: errorDetails };
         }
@@ -31,8 +30,8 @@ export const runTests = async (testCode: string): Promise<any> => {
             detail: `Unexpected error: ${error.message}`,
         };
     }
-    finally{
-        if(execFile(testPath)){
+    finally {
+        if (execFile(testPath)) {
             fs.unlinkSync(testPath);
         }
     }

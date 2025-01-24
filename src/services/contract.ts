@@ -11,8 +11,7 @@ const contractService = {
             const result = await compileContract(cleanSourceCode(contractCode), contractName);
             return result;
         } catch (error: any) {
-
-            console.log("contractService Error: ", error.message);
+            console.log("contractService Error: ", error);
 
         }
     },

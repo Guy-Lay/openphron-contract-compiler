@@ -4,7 +4,7 @@
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/idealbridgex/AI-smartcontract-builder/tree/main/contract
+   git clone https://github.com/idealbridgex/openphron-contract-compiler
    ```
 
 2. Install dependencies:

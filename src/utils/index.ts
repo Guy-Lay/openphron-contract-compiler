@@ -5,7 +5,7 @@ export const getProvider = () => {
     if (!rpcUrl) {
         throw new Error("RPC_URL is not defined in the environment variables.");
     }
-    return new ethers.JsonRpcProvider(rpcUrl);
+    return new ethers.providers.JsonRpcProvider(rpcUrl);
 };
 
 export const getSigner = () => {
@@ -49,4 +49,6 @@ export const parseTestError = (stderr: string): string => {
         .join("\n");
     return relevantErrors || "Unable to determine the exact error.";
 };
+
+
 

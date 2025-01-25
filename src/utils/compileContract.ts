@@ -8,6 +8,7 @@ export const compileContract = async (contractCode: string, contractName: string
     fs.mkdirSync(path.dirname(contractPath), { recursive: true });
 
     fs.writeFileSync(contractPath, contractCode);
+    
     try {
         console.log("Running Hardhat compile...");
         await run("compile");

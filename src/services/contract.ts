@@ -19,6 +19,7 @@ const contractService = {
         try {
             const contractName = extractContractName(contractCode);
             const result = await runTests(testCode, cleanSourceCode(contractCode), contractName);
+            console.log("result: ", JSON.stringify(result, null, 2));
             return result;
         } catch (error: any) {
             console.log("testCode-Error: ", error.message);

@@ -31,10 +31,10 @@ export const runTests = async (testCode: string, contractCode: string, contractN
         return { success: true, output: stdout };
     } catch (error: any) {
 
-        console.error("Error during Test Execution:", error.message);
+        console.error("Error during Test Execution:", error.stderr);
         return {
             success: false,
-            error: `Unexpected error: ${error.message}`,
+            error: error.stderr,
         };
     } finally {
         if (fs.existsSync(testPath)) {

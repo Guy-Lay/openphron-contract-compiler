@@ -1,5 +1,5 @@
 import { compileContract } from "../utils/compileContract";
-import { cleanSourceCode, extractContractName, getSigner } from "../utils";
+import { cleanSourceCode, extractContractName } from "../utils";
 import { autoInstallModules } from "../utils/installModules";
 import { runTests } from "../utils/runTest";
 

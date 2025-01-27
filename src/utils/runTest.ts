@@ -2,7 +2,8 @@ import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
 import path from "path";
-import { cleanTestScript } from "./index";
+import { run } from "hardhat";
+import { cleanTestOutput, cleanTestScript } from "./index";
 
 const execAsync = promisify(exec);
 
@@ -17,34 +18,30 @@ export const runTests = async (testCode: string, contractCode: string, contractN
 
         fs.mkdirSync(path.dirname(contractPath), { recursive: true });
         fs.writeFileSync(contractPath, contractCode);
-        // Then run the tests
-        console.log("Running tests...");
-        const { stdout, stderr } = await execAsync('yarn test');
 
-        if(stderr){
-            return {
-                success: false,
-                error: stderr
-            };
+        console.log("Executing Command: yarn test", testPath);
+        await run("compile")
+        const { stdout, stderr } = await execAsync(`yarn test ${testPath}`);
+
+        if (stderr) {
+            return { success: false, error: stderr };
         }
-        
-        return {
-            success: true,
-            output: stdout
-        };
 
+        console.log("Test Execution Completed Successfully");
+        return { success: true, output: stdout };
     } catch (error: any) {
 
+        console.error("Error during Test Execution:", cleanTestOutput(error.stderr));
         return {
             success: false,
-            error: error.stderr
+            error: cleanTestOutput(error.stderr),
         };
     } finally {
-        if (fs.existsSync(testPath)) {
-            fs.unlinkSync(testPath);
-        }
-        if (fs.existsSync(contractPath)) {
-            fs.unlinkSync(contractPath);
-        }
+        // if (fs.existsSync(testPath)) {
+        //     fs.unlinkSync(testPath);
+        // }
+        // if (fs.existsSync(contractPath)) {
+        //     fs.unlinkSync(contractPath);
+        // }
     }
 };

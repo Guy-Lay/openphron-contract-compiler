@@ -5,7 +5,7 @@ export const getProvider = () => {
     if (!rpcUrl) {
         throw new Error("RPC_URL is not defined in the environment variables.");
     }
-    return new ethers.JsonRpcProvider(rpcUrl);
+    return new ethers.providers.JsonRpcProvider(rpcUrl);
 };
 
 export const getSigner = () => {
@@ -50,5 +50,20 @@ export const parseTestError = (stderr: string): string => {
     return relevantErrors || "Unable to determine the exact error.";
 };
 
+export const cleanTestOutput = (stderr: string): string => {
+    // Patterns to remove unnecessary lines
+    const unnecessaryPatterns = [
+        /^\(node:\d+\).*/, // Matches lines starting with (node:...
+        /Ran all test suites.*/, // Matches lines mentioning "Ran all test suites"
+        /^\(Use `node.*/
+    ];
 
+    // Split the stderr into lines and filter out unnecessary lines
+    const cleanedLines = stderr
+        .split('\n')
+        .filter(line => !unnecessaryPatterns.some(pattern => pattern.test(line)));
+
+    // Join the remaining lines into a single string and return
+    return cleanedLines.join('\n');
+}
 

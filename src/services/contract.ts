@@ -16,14 +16,9 @@ const contractService = {
         }
     },
     testCode: async (testCode: string, contractCode: string): Promise<any> => {
-        try {
-            const contractName = extractContractName(contractCode);
-            const result = await runTests(testCode, cleanSourceCode(contractCode), contractName);
-            console.log("result: ", JSON.stringify(result, null, 2));
-            return result;
-        } catch (error: any) {
-            console.log("testCode-Error: ", error.message);
-        }
+        const contractName = extractContractName(contractCode);
+        const result = await runTests(testCode, cleanSourceCode(contractCode), contractName);
+        return result;
     }
 }
 

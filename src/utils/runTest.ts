@@ -7,25 +7,18 @@ import { artifacts } from "hardhat";
 
 const execAsync = promisify(exec);
 
-export const runTests = async (contractCode: string, testCode: string, name: string): Promise<any> => {
-
-    const contractPath = path.join(__dirname, "../../contracts", `${name}.sol`);
+export const runTests = async (testCode: string, contractCode: string, contractName: string): Promise<any> => {
     const testPath = path.join(__dirname, "../../test", "runTest.test.ts");
+    const contractPath = path.join(__dirname, "../../contracts", `${contractName}.sol`);
+    console.log("testPath:", testPath);
 
-    const originalConsoleError = console.error;
-    let compilationErrors = '';
-
-    console.error = (...args) => {
-        compilationErrors += args.join(' ') + '\n';
-        originalConsoleError.apply(console, args);
-    };
-    
     try {
+        fs.mkdirSync(path.dirname(testPath), { recursive: true });
+        fs.writeFileSync(testPath, cleanTestScript(testCode));
+
         fs.mkdirSync(path.dirname(contractPath), { recursive: true });
         fs.writeFileSync(contractPath, contractCode);
 
-        fs.mkdirSync(path.dirname(testPath), { recursive: true });
-        fs.writeFileSync(testPath, cleanTestScript(testCode));
         console.log("Executing Command: yarn test", testPath);
 
         const { stdout, stderr } = await execAsync(`yarn test ${testPath}`);

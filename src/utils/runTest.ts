@@ -37,11 +37,12 @@ export const runTests = async (testCode: string, contractCode: string, contractN
             error: cleanTestOutput(error.stderr),
         };
     } finally {
-        // if (fs.existsSync(testPath)) {
-        //     fs.unlinkSync(testPath);
-        // }
-        // if (fs.existsSync(contractPath)) {
-        //     fs.unlinkSync(contractPath);
-        // }
+        await run("clean")
+        if (fs.existsSync(testPath)) {
+            fs.unlinkSync(testPath);
+        }
+        if (fs.existsSync(contractPath)) {
+            fs.unlinkSync(contractPath);
+        }
     }
 };

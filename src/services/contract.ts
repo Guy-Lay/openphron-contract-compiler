@@ -18,8 +18,6 @@ const contractService = {
     testCode: async (testCode: string): Promise<any> => {
         try {
             const result = await runTests(testCode);
-            if (!result) throw new Error("the result is empty!")
-                // console.log(JSON.stringify(result, null, 2));
             return result;
         } catch (error: any) {
             console.log("testCode-Error: ", error.message);

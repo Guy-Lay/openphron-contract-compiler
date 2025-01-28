@@ -5,25 +5,35 @@ import * as path from "path";
 export const compileContract = async (contractCode: string, contractName: string): Promise<any> => {
     const contractPath = path.join(__dirname, "../../contracts", `${contractName}.sol`);
 
-    fs.mkdirSync(path.dirname(contractPath), { recursive: true });
+    // Store original console.error
+    const originalConsoleError = console.error;
+    let compilationErrors = '';
 
-    fs.writeFileSync(contractPath, contractCode);
-    
+    // Intercept console.error calls
+    console.error = (...args) => {
+        compilationErrors += args.join(' ') + '\n';
+        originalConsoleError.apply(console, args);
+    };
+
     try {
+        fs.mkdirSync(path.dirname(contractPath), { recursive: true });
+        fs.writeFileSync(contractPath, contractCode);
+
         console.log("Running Hardhat compile...");
         await run("compile");
-    } catch (error: any) {
-        if (fs.existsSync(contractPath)) {
-            fs.unlinkSync(contractPath);
-        }
-        return { error: error.message };
-    }
-    try {
+        
         const contractArtifact = await artifacts.readArtifact(contractName);
         return { abi: contractArtifact.abi, bytecode: contractArtifact.bytecode };
     } catch (error: any) {
-        console.error("Error reading contract artifact:", error.message);
+
+        console.log("compilationErrors", compilationErrors);
+        return { 
+            error: compilationErrors,
+        };
     } finally {
+        // Restore original console.error
+        console.error = originalConsoleError;
+        
         if (fs.existsSync(contractPath)) {
             fs.unlinkSync(contractPath);
         }

@@ -17,10 +17,9 @@ export const runTests = async (testCode: string): Promise<any> => {
         console.log("Executing Command: yarn test", testPath);
 
         const { stdout, stderr } = await execAsync(`yarn test ${testPath}`);
-        console.log("stdout:", stdout);
 
         if (stderr) {
-            return { success: false, detail: stderr };
+            return { success: false, error: stderr };
         }
 
         console.log("Test Execution Completed Successfully");
@@ -30,7 +29,7 @@ export const runTests = async (testCode: string): Promise<any> => {
         console.error("Error during Test Execution:", error.message);
         return {
             success: false,
-            detail: `Unexpected error: ${error.message}`,
+            error: `Unexpected error: ${error.message}`,
         };
     } finally {
         if (fs.existsSync(testPath)) {

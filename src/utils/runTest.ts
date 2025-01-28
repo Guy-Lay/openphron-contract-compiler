@@ -6,14 +6,18 @@ import { cleanTestScript } from "./index";
 
 const execAsync = promisify(exec);
 
-export const runTests = async (testCode: string): Promise<any> => {
+export const runTests = async (testCode: string, contractCode: string, contractName: string): Promise<any> => {
     const testPath = path.join(__dirname, "../../test", "runTest.test.ts");
+    const contractPath = path.join(__dirname, "../../contracts", `${contractName}.sol`);
     console.log("testPath:", testPath);
 
-    fs.mkdirSync(path.dirname(testPath), { recursive: true });
-    fs.writeFileSync(testPath, cleanTestScript(testCode));
-
     try {
+        fs.mkdirSync(path.dirname(testPath), { recursive: true });
+        fs.writeFileSync(testPath, cleanTestScript(testCode));
+
+        fs.mkdirSync(path.dirname(contractPath), { recursive: true });
+        fs.writeFileSync(contractPath, contractCode);
+
         console.log("Executing Command: yarn test", testPath);
 
         const { stdout, stderr } = await execAsync(`yarn test ${testPath}`);
@@ -34,6 +38,9 @@ export const runTests = async (testCode: string): Promise<any> => {
     } finally {
         if (fs.existsSync(testPath)) {
             fs.unlinkSync(testPath);
+        }
+        if (fs.existsSync(contractPath)) {
+            fs.unlinkSync(contractPath);
         }
     }
 };

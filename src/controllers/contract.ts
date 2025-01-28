@@ -19,8 +19,9 @@ const contractController = {
     },
     testContrat: async (req: any, res: any) => {
         try {
-            const { testCode } = req.body;
-            const result = await contractService.testCode(testCode);
+            const { testCode, contractCode } = req.body;
+            console.log("test-controller")
+            const result = await contractService.testCode(testCode, contractCode);
             res.json(result);
         } catch (error: any) {
             res.json({ success: false, error: error.message });

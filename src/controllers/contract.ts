@@ -12,16 +12,16 @@ const contractController = {
                 res.json({ success: false, error: result.error });
                 return;
             }
-            console.log({result})
-            res.json({ success: true, abi: result.abi, bytecode: result.bytecode });
+            console.log({ result })
+            res.json({ success: true, abi: result.abi, bytecode: result.bytecode, result: result });
         } catch (error: any) {
             console.error("Error deploying contract:", error.message);
         }
     },
     testContrat: async (req: any, res: any) => {
         try {
-            const { testCode,contractCode } = req.body;
-            const result = await contractService.testCode(testCode,contractCode);
+            const { testCode, contractCode } = req.body;
+            const result = await contractService.testCode(testCode, contractCode);
             res.json(result);
         } catch (error: any) {
             res.json({ success: false, error: error.message });

@@ -12,11 +12,7 @@ const config: HardhatUserConfig = {
                 runs: 200,
             },
         },
-    },
-    typechain: {
-        outDir: "typechain",
-        target: "ethers-v5",
-    },
+    }
 };
 
 export default config;

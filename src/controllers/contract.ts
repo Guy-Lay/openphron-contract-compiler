@@ -12,8 +12,7 @@ const contractController = {
                 res.json({ success: false, error: result.error });
                 return;
             }
-            console.log({ result })
-            res.json({ success: true, abi: result.abi, bytecode: result.bytecode, result: result });
+            res.json({ success: true, abi: result.abi, bytecode: result.bytecode });
         } catch (error: any) {
             res.json({ success: false, error: "server error" });
             console.error("Error deploying contract:", error.message);

@@ -10,6 +10,7 @@ node_modules
 # TypeChain files
 /typechain
 /typechain-types
+/yarn.lock
 
 # solidity-coverage files
 /coverage

@@ -21,21 +21,22 @@ export const compileContract = async (contractCode: string, contractName: string
 
         console.log("Running Hardhat compile...");
         await run("compile");
-        
+
         const contractArtifact = await artifacts.readArtifact(contractName);
         return { abi: contractArtifact.abi, bytecode: contractArtifact.bytecode };
     } catch (error: any) {
         console.log("error", error);
         console.log("compilationErrors", compilationErrors);
-        return { 
-            error: compilationErrors,
+        return {
+            error: `${compilationErrors} \n ${error.message}`,
         };
     } finally {
         // Restore original console.error
         console.error = originalConsoleError;
-        
+
         if (fs.existsSync(contractPath)) {
             fs.unlinkSync(contractPath);
         }
+        
     }
 };

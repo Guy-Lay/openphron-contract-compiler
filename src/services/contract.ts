@@ -7,7 +7,7 @@ const contractService = {
     compile: async (contractCode: string): Promise<any> => {
         try {
             const contractName = extractContractName(contractCode);
-            await autoInstallModules(contractCode);
+            // await autoInstallModules(contractCode);
             const result = await compileContract(cleanSourceCode(contractCode), contractName);
             return result;
         } catch (error: any) {

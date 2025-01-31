@@ -37,11 +37,16 @@ export const runTests = async (testCode: string, contractCode: string, contractN
             error: cleanTestOutput(error.stderr),
         };
     } finally {
-        // if (fs.existsSync(testPath)) {
-        //     fs.unlinkSync(testPath);
-        // }
-        // if (fs.existsSync(contractPath)) {
-        //     fs.unlinkSync(contractPath);
-        // }
+        if (fs.existsSync(testPath)) {
+            fs.unlinkSync(testPath);
+        }
+        if (fs.existsSync(contractPath)) {
+            fs.unlinkSync(contractPath);
+        }
+        //remove atifacts and cache and contracts and test
+        // fs.rmdirSync(path.join(__dirname, "../../artifacts"));
+        // fs.rmdirSync(path.join(__dirname, "../../cache"));
+        // fs.rmdirSync(path.join(__dirname, "../../contracts"));
+        // fs.rmdirSync(path.join(__dirname, "../../test"));
     }
 };

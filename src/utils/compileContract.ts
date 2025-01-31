@@ -25,10 +25,10 @@ export const compileContract = async (contractCode: string, contractName: string
         const contractArtifact = await artifacts.readArtifact(contractName);
         return { abi: contractArtifact.abi, bytecode: contractArtifact.bytecode };
     } catch (error: any) {
-        console.log("error", error);
+        console.log("error", error);    
         console.log("compilationErrors", compilationErrors);
         return {
-            error: `${compilationErrors} \n ${error.message}`,
+            error: compilationErrors,
         };
     } finally {
         // Restore original console.error

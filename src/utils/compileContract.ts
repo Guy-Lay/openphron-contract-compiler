@@ -31,6 +31,7 @@ export const compileContract = async (contractCode: string, contractName: string
             error: compilationErrors,
         };
     } finally {
+        await run("clean")
         // Restore original console.error
         console.error = originalConsoleError;
 

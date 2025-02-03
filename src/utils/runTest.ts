@@ -39,7 +39,7 @@ export const runTests = async (testCode: string, contractCode: string, contractN
             error: cleanTestOutput(error.stderr) || error.message,
         };
     } finally {
-        execSync("npx hardhat clean")
+        run("clean")
         
         if (fs.existsSync(testPath)) {
             fs.unlinkSync(testPath);

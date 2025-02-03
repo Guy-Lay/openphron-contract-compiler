@@ -1,4 +1,4 @@
-import { artifacts, run } from "hardhat";
+import { run,artifacts } from "hardhat";
 import * as fs from "fs";
 import * as path from "path";
 import { execSync } from "child_process";
@@ -14,6 +14,7 @@ export const compileContract = async (contractCode: string, contractName: string
             encoding: "utf-8",
             stdio: "pipe"
         });
+        console.log(`compile done for ${contractName}`);
 
         const contractArtifact = await artifacts.readArtifact(contractName);
         return { abi: contractArtifact.abi, bytecode: contractArtifact.bytecode };
@@ -25,7 +26,8 @@ export const compileContract = async (contractCode: string, contractName: string
             error: errorMessage,
         };
     } finally {
-        execSync("npx hardhat clean")
+        run("clean")
+        console.log("clean");
 
         if (fs.existsSync(contractPath)) {
             fs.unlinkSync(contractPath);

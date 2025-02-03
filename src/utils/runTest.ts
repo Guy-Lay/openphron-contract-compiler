@@ -36,7 +36,7 @@ export const runTests = async (testCode: string, contractCode: string, contractN
         console.error("Error during Test Execution:", cleanTestOutput(error.stderr));
         return {
             success: false,
-            error: cleanTestOutput(error.stderr),
+            error: cleanTestOutput(error.stderr) || error.message,
         };
     } finally {
         execSync("npx hardhat clean")

@@ -1,4 +1,4 @@
-import { exec } from "child_process";
+import { exec, execSync } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
 import path from "path";
@@ -19,8 +19,10 @@ export const runTests = async (testCode: string, contractCode: string, contractN
         fs.mkdirSync(path.dirname(contractPath), { recursive: true });
         fs.writeFileSync(contractPath, contractCode);
 
-        console.log("Executing Command: yarn test", testPath);
-        await run("compile")
+        execSync("npx cross-env FORCE_COLOR=1 hardhat compile", {
+            encoding: "utf-8",
+            stdio: "pipe"
+        });
         const { stdout, stderr } = await execAsync(`yarn test ${testPath}`);
 
         if (stderr) {
@@ -37,7 +39,8 @@ export const runTests = async (testCode: string, contractCode: string, contractN
             error: cleanTestOutput(error.stderr),
         };
     } finally {
-        await run("clean")
+        execSync("npx hardhat clean")
+        
         if (fs.existsSync(testPath)) {
             fs.unlinkSync(testPath);
         }

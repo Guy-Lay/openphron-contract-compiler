@@ -1,11 +1,11 @@
 import { compileContract } from "../utils/compileContract";
 import { cleanSourceCode, extractContractName } from "../utils";
-import { autoInstallModules } from "../utils/installModules";
 import { runTests } from "../utils/runTest";
 
 const contractService = {
     compile: async (contractCode: string): Promise<any> => {
         const contractName = extractContractName(contractCode);
+
         // await autoInstallModules(contractCode);
         const result = await compileContract(cleanSourceCode(contractCode), contractName);
         return result;

@@ -28,7 +28,7 @@ export const compileContract = async (contractCode: string, contractName: string
         console.log("error", error);    
         console.log("compilationErrors", compilationErrors);
         return {
-            error: compilationErrors,
+            error: compilationErrors || error.message,
         };
     } finally {
         await run("clean")

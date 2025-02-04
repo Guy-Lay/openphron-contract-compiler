@@ -1,4 +1,4 @@
-import { run,artifacts } from "hardhat";
+import { run, artifacts } from "hardhat";
 import * as fs from "fs";
 import * as path from "path";
 import { execSync } from "child_process";
@@ -18,7 +18,6 @@ export const compileContract = async (contractCode: string, contractName: string
 
         const contractArtifact = await artifacts.readArtifact(contractName);
         return { abi: contractArtifact.abi, bytecode: contractArtifact.bytecode };
-
     } catch (error: any) {
         const errorMessage = error.stderr?.toString() || error.stdout?.toString() || error.message;
         console.log("compileContract error", errorMessage);
@@ -26,6 +25,7 @@ export const compileContract = async (contractCode: string, contractName: string
             error: errorMessage,
         };
     } finally {
+        if (artifacts.clearCache) { artifacts.clearCache() }
         run("clean")
         console.log("clean");
 

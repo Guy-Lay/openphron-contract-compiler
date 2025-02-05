@@ -17,7 +17,7 @@ const contractController = {
                 }
                 res.json({ success: true, abi: result.abi, bytecode: result.bytecode });
             } catch (error: any) {
-                res.json({ success: false, error: error.message });
+                res.json({ success: false, error: "compile Error:" + error.message });
                 console.error("compile Error:", error.message);
             }
         });

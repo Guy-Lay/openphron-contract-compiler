@@ -22,7 +22,7 @@ export const compileContract = async (contractCode: string, contractName: string
         const errorMessage = error.stderr?.toString() || error.stdout?.toString() || error.message;
         console.log("compileContract error", errorMessage);
         return {
-            error: "There is error while compile"+errorMessage,
+            error: errorMessage,
         };
     } finally {
         run("clean")

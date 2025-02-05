@@ -12,12 +12,12 @@ const contractController = {
                 const result = await contractService.compile(contractCode);
 
                 if (result.error) {
-                    res.json({ success: false, error: "compiler error" }); //,result.error 
+                    res.json({ success: false, error: result.error });
                     return;
                 }
                 res.json({ success: true, abi: result.abi, bytecode: result.bytecode });
             } catch (error: any) {
-                res.json({ success: false, error: "server error" });
+                res.json({ success: false, error: error.message });
                 console.error("compile Error:", error.message);
             }
         });
@@ -31,7 +31,7 @@ const contractController = {
             } catch (error: any) {
                 res.json({ success: false, error: error.message });
             }
-        })
+        }
     }
 }
 

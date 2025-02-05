@@ -25,8 +25,11 @@ export const compileContract = async (contractCode: string, contractName: string
             error: errorMessage,
         };
     } finally {
-        if (artifacts.clearCache) { artifacts.clearCache() }
         run("clean")
+        if (artifacts.clearCache) {
+            console.log("clearCache")
+            artifacts.clearCache()
+        }
         console.log("clean");
 
         if (fs.existsSync(contractPath)) {

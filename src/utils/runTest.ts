@@ -2,7 +2,7 @@ import { exec, execSync } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
 import path from "path";
-import { run } from "hardhat";
+import { artifacts, run } from "hardhat";
 import { cleanTestOutput, cleanTestScript } from "./index";
 
 const execAsync = promisify(exec);
@@ -40,7 +40,11 @@ export const runTests = async (testCode: string, contractCode: string, contractN
         };
     } finally {
         run("clean")
-        
+        if (artifacts.clearCache) {
+            console.log("clearCache")
+            artifacts.clearCache()
+        }
+
         if (fs.existsSync(testPath)) {
             fs.unlinkSync(testPath);
         }

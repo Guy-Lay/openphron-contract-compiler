@@ -14,7 +14,7 @@ const contractController = {
             }
             res.json({ success: true, abi: result.abi, bytecode: result.bytecode });
         } catch (error: any) {
-            res.json({ success: false, error: "server error" });
+            res.json({ success: false, error: "Server Error!" });
             console.error("Error deploying contract:", error.message);
         }
     },
@@ -24,7 +24,8 @@ const contractController = {
             const result = await contractService.testCode(testCode, contractCode);
             res.json(result);
         } catch (error: any) {
-            res.json({ success: false, error: error.message });
+            res.json({ success: false, error: "Server Error!" });
+            console.log("Error testing contract: ", error.message)
         }
     }
 }

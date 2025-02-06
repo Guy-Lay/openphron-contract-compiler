@@ -37,7 +37,7 @@ export const runTests = async (testCode: string, contractCode: string, contractN
             error: cleanTestOutput(error.stderr),
         };
     } finally {
-        await run("clean")
+        // await run("clean")
         if (fs.existsSync(testPath)) {
             fs.unlinkSync(testPath);
         }

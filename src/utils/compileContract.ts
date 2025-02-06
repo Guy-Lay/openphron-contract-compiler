@@ -25,19 +25,19 @@ export const compileContract = async (contractCode: string, contractName: string
         const contractArtifact = await artifacts.readArtifact(contractName);
         return { abi: contractArtifact.abi, bytecode: contractArtifact.bytecode };
     } catch (error: any) {
-        console.log("error", error);    
+        console.log("error", error);
         console.log("compilationErrors", compilationErrors);
         return {
-            error: compilationErrors,
+            error: compilationErrors || error.message,
         };
     } finally {
-        await run("clean")
+        // await run("clean");
         // Restore original console.error
         console.error = originalConsoleError;
 
         if (fs.existsSync(contractPath)) {
             fs.unlinkSync(contractPath);
         }
-        
+
     }
 };

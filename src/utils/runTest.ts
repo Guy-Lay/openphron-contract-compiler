@@ -1,8 +1,8 @@
-import { exec } from "child_process";
+import { exec, execSync } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
 import path from "path";
-import { run } from "hardhat";
+import { artifacts, run } from "hardhat";
 import { cleanTestOutput, cleanTestScript } from "./index";
 
 const execAsync = promisify(exec);
@@ -19,8 +19,10 @@ export const runTests = async (testCode: string, contractCode: string, contractN
         fs.mkdirSync(path.dirname(contractPath), { recursive: true });
         fs.writeFileSync(contractPath, contractCode);
 
-        console.log("Executing Command: yarn test", testPath);
-        await run("compile")
+        execSync("npx cross-env FORCE_COLOR=1 hardhat compile", {
+            encoding: "utf-8",
+            stdio: "pipe"
+        });
         const { stdout, stderr } = await execAsync(`yarn test ${testPath}`);
 
         if (stderr) {
@@ -34,10 +36,15 @@ export const runTests = async (testCode: string, contractCode: string, contractN
         console.error("Error during Test Execution:", cleanTestOutput(error.stderr));
         return {
             success: false,
-            error: cleanTestOutput(error.stderr),
+            error: cleanTestOutput(error.stderr) || error.message,
         };
     } finally {
-        await run("clean")
+        run("clean")
+        if (artifacts.clearCache) {
+            console.log("clearCache")
+            artifacts.clearCache()
+        }
+
         if (fs.existsSync(testPath)) {
             fs.unlinkSync(testPath);
         }

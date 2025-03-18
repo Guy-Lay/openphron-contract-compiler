@@ -2,14 +2,17 @@ import { run, artifacts } from "hardhat";
 import * as fs from "fs";
 import * as path from "path";
 import { execSync } from "child_process";
+import { makeNewCode } from "./writeCode";
+import { clearContract } from ".";
 
 export const compileContract = async (contractCode: string, contractName: string): Promise<any> => {
-    const contractPath = path.join(__dirname, "../../contracts", `${contractName}.sol`);
-
+    const contractPath = await makeNewCode(contractCode, contractName, "contracts");
+    if (!contractPath) {
+        return {
+            error: "Contract not found",
+        };
+    }
     try {
-        fs.mkdirSync(path.dirname(contractPath), { recursive: true });
-        fs.writeFileSync(contractPath, contractCode);
-
         execSync("npx cross-env FORCE_COLOR=1 hardhat compile", {
             encoding: "utf-8",
             stdio: "pipe"
@@ -25,16 +28,6 @@ export const compileContract = async (contractCode: string, contractName: string
             error: errorMessage,
         };
     } finally {
-        run("clean")
-        if (artifacts.clearCache) {
-            console.log("clearCache")
-            artifacts.clearCache()
-        }
-        console.log("clean");
-
-        if (fs.existsSync(contractPath)) {
-            fs.unlinkSync(contractPath);
-        }
-
+        clearContract(contractPath);
     }
 };

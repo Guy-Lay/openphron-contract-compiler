@@ -33,6 +33,17 @@ const contractController = {
             }
         }
         );
+    },
+    verifyContract: async (req: any, res: any) => {
+        addToQueue(req, res, async (req, res) => {
+            try {
+                const { contractAddress, constructorArguments, chainId, contractCode } = req.body;
+                const result = await contractService.verify(contractAddress, constructorArguments, chainId, contractCode);
+                res.json(result);
+            } catch (error: any) {
+                res.json({ success: false, error: error.message });
+            }
+        });
     }
 }
 

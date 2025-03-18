@@ -1,6 +1,7 @@
 import { compileContract } from "../utils/compileContract";
 import { cleanSourceCode, extractContractName } from "../utils";
 import { runTests } from "../utils/runTest";
+import { verifyContract } from "../utils/verifyContract";
 
 const contractService = {
     compile: async (contractCode: string): Promise<any> => {
@@ -13,6 +14,11 @@ const contractService = {
     testCode: async (testCode: string, contractCode: string): Promise<any> => {
         const contractName = extractContractName(contractCode);
         const result = await runTests(testCode, cleanSourceCode(contractCode), contractName);
+        return result;
+    },
+    verify: async (contractAddress: string, constructorArguments: any[], chainId: number, contractCode: string): Promise<any> => {
+
+        const result = await verifyContract(contractAddress, constructorArguments, chainId, cleanSourceCode(contractCode));
         return result;
     }
 }

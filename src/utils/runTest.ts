@@ -1,23 +1,21 @@
 import { exec, execSync } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
-import path from "path";
 import { artifacts, run } from "hardhat";
-import { cleanTestOutput, cleanTestScript } from "./index";
+import { cleanTestOutput, cleanTestScript, clearContract } from "./index";
+import { makeNewCode } from "./writeCode";
 
 const execAsync = promisify(exec);
 
 export const runTests = async (testCode: string, contractCode: string, contractName: string): Promise<any> => {
-    const testPath = path.join(__dirname, "../../test", "runTest.test.ts");
-    const contractPath = path.join(__dirname, "../../contracts", `${contractName}.sol`);
-    console.log("testPath:", testPath);
-
+    const testPath = await makeNewCode(testCode, contractName, "test");
+    const contractPath = await makeNewCode(contractCode, contractName, "contracts");
+    if (!testPath || !contractPath) {
+        return {
+            error: "Contract not found",
+        };
+    }
     try {
-        fs.mkdirSync(path.dirname(testPath), { recursive: true });
-        fs.writeFileSync(testPath, cleanTestScript(testCode));
-
-        fs.mkdirSync(path.dirname(contractPath), { recursive: true });
-        fs.writeFileSync(contractPath, contractCode);
 
         execSync("npx cross-env FORCE_COLOR=1 hardhat compile", {
             encoding: "utf-8",
@@ -39,17 +37,6 @@ export const runTests = async (testCode: string, contractCode: string, contractN
             error: cleanTestOutput(error.stderr) || error.message,
         };
     } finally {
-        run("clean")
-        if (artifacts.clearCache) {
-            console.log("clearCache")
-            artifacts.clearCache()
-        }
-
-        if (fs.existsSync(testPath)) {
-            fs.unlinkSync(testPath);
-        }
-        if (fs.existsSync(contractPath)) {
-            fs.unlinkSync(contractPath);
-        }
+        clearContract(contractPath);
     }
 };

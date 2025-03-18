@@ -1,4 +1,6 @@
 import { ethers, Wallet } from "ethers";
+import * as fs from "fs";
+import { run, artifacts } from "hardhat";
 
 export const getProvider = () => {
     const rpcUrl = process.env.RPC_URL;
@@ -28,7 +30,8 @@ export const extractContractName = (sourceCode: string): string => {
 
 export const cleanSourceCode = (sourceCode: string): string => {
     // Remove the leading "```solidity" and trailing "```"
-    let cleanedCode = sourceCode.replace(/```solidity|```/g, "").trim();
+    let cleanedCode = sourceCode.replace(/```solidity|```/g,
+        sourceCode.includes("SPDX-License-Identifier:") ? "" : "//SPDX-License-Identifier: MIT").trim();
 
     return cleanedCode;
 };
@@ -65,5 +68,22 @@ export const cleanTestOutput = (stderr: string): string => {
 
     // Join the remaining lines into a single string and return
     return cleanedLines.join('\n');
+}
+
+export const clearContract = (contractPath: string) => {
+    try {
+        run("clean")
+        if (artifacts.clearCache) {
+            console.log("clearCache")
+            artifacts.clearCache()
+        }
+        console.log("cleaned")
+        if (fs.existsSync(contractPath)) {
+            fs.unlinkSync(contractPath);
+        }
+        console.log(`Contract file ${contractPath} has been deleted.`);
+    } catch (error) {
+        console.error(`Error deleting contract file ${contractPath}:`, error);
+    }
 }
 

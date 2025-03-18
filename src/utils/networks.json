@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "name": "mainnet"
+    },
+    {
+        "id": 5,
+        "name": "goerli"
+    },
+    {
+        "id": 137,
+        "name": "polygon"
+    },
+    {
+        "id": 80001,
+        "name": "mumbai"
+    },
+    {
+        "id": 17000,
+        "name": "holesky"
+    },
+    {
+        "id": 5000,
+        "name": "mantle"
+    },
+    {
+        "id": 42613,
+        "name": "arbitrum"
+    },
+    {
+        "id": 11155111,
+        "name": "sepolia"
+    }
+]
